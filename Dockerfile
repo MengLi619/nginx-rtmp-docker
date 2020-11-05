@@ -6,6 +6,17 @@ LABEL maintainer="Sebastian Ramirez <tiangolo@gmail.com>"
 ENV NGINX_VERSION nginx-1.18.0
 ENV NGINX_RTMP_MODULE_VERSION 1.2.1
 
+# Install ffmpeg
+RUN echo deb http://www.deb-multimedia.org stretch main non-free \
+    >>/etc/apt/sources.list && \
+    wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb && \
+    dpkg -i deb-multimedia-keyring_2016.8.1_all.deb && \
+    apt-get update && \
+    apt-get -y install deb-multimedia-keyring && \
+    apt-get update && \
+    apt-get -y dist-upgrade && \
+    apt-get -y install ffmpeg
+
 # Install dependencies
 RUN apt-get update && \
     apt-get install -y ca-certificates openssl libssl-dev && \
@@ -48,9 +59,6 @@ RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
 # Forward logs to Docker
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
-
-# Install ffmpeg
-RUN apt-get install -y ffmpeg
 
 # Set up config file
 COPY nginx.conf /etc/nginx/nginx.conf
