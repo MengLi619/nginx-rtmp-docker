@@ -13,6 +13,9 @@ RUN apt-get update && \
         libssl-dev \
         zlib1g-dev
 
+# Install ffmpeg
+RUN apt-get install -y ffmpeg
+
 # Versions of Nginx and nginx-rtmp-module to use
 ENV NGINX_VERSION nginx-1.18.0
 ENV NGINX_RTMP_MODULE_VERSION 1.2.1
@@ -40,7 +43,6 @@ RUN mkdir -p /tmp/build/nginx-rtmp-module && \
 # it explicitly. Not just for order but to have it in the PATH
 RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
     ./configure \
-        -no-warnings-are-errors \
         --sbin-path=/usr/local/sbin/nginx \
         --conf-path=/etc/nginx/nginx.conf \
         --error-log-path=/var/log/nginx/error.log \
