@@ -49,6 +49,9 @@ RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
+# Install ffmpeg
+RUN apt-get install -y ffmpeg
+
 # Set up config file
 COPY nginx.conf /etc/nginx/nginx.conf
 
