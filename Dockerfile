@@ -1,10 +1,4 @@
-FROM buildpack-deps:stretch
-
-LABEL maintainer="Sebastian Ramirez <tiangolo@gmail.com>"
-
-# Versions of Nginx and nginx-rtmp-module to use
-ENV NGINX_VERSION nginx-1.18.0
-ENV NGINX_RTMP_MODULE_VERSION 1.2.1
+FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 
 # Install ffmpeg
 RUN echo deb http://www.deb-multimedia.org stretch main non-free \
@@ -16,6 +10,10 @@ RUN echo deb http://www.deb-multimedia.org stretch main non-free \
     apt-get update && \
     apt-get -y dist-upgrade && \
     apt-get -y install ffmpeg
+
+# Versions of Nginx and nginx-rtmp-module to use
+ENV NGINX_VERSION nginx-1.18.0
+ENV NGINX_RTMP_MODULE_VERSION 1.2.1
 
 # Install dependencies
 RUN apt-get update && \
