@@ -40,6 +40,7 @@ RUN mkdir -p /tmp/build/nginx-rtmp-module && \
 # it explicitly. Not just for order but to have it in the PATH
 RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
     ./configure \
+        -no-warnings-are-errors \
         --sbin-path=/usr/local/sbin/nginx \
         --conf-path=/etc/nginx/nginx.conf \
         --error-log-path=/var/log/nginx/error.log \
