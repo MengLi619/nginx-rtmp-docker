@@ -1,6 +1,8 @@
-FROM ubuntu:20.04
+FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility,video
 
 # Install build tools, dependencies
 RUN apt-get update && \
