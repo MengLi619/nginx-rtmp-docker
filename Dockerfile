@@ -2,7 +2,7 @@ FROM nvidia/cuda:11.1-runtime-ubuntu20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build tools
+# Install build tools, dependencies
 RUN apt-get update && \
     apt-get install -y \
         wget \
@@ -11,19 +11,12 @@ RUN apt-get update && \
         libpcre3-dev \
         openssl \
         libssl-dev \
-        zlib1g-dev
-
-# Install ffmpeg
-RUN apt-get install -y ffmpeg
+        zlib1g-dev \
+        ca-certificates
 
 # Versions of Nginx and nginx-rtmp-module to use
 ENV NGINX_VERSION nginx-1.18.0
 ENV NGINX_RTMP_MODULE_VERSION 1.2.1
-
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -y ca-certificates openssl libssl-dev && \
-    rm -rf /var/lib/apt/lists/*
 
 # Download and decompress Nginx
 RUN mkdir -p /tmp/build/nginx && \
@@ -53,7 +46,8 @@ RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
         --with-http_ssl_module \
         --with-threads \
         --with-ipv6 \
-        --add-module=/tmp/build/nginx-rtmp-module/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} && \
+        --add-module=/tmp/build/nginx-rtmp-module/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} \
+        --with-cc-opt="-Wimplicit-fallthrough=0" && \
     make -j $(getconf _NPROCESSORS_ONLN) && \
     make install && \
     mkdir /var/lock/nginx && \
