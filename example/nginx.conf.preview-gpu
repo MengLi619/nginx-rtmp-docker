@@ -13,9 +13,9 @@ rtmp {
         application live {
             live on;
             record off;
-            exec ffmpeg -vsync 0
-                –hwaccel cuvid -vcodec h264_cuvid -i rtmp://localhost/live/$name
-                -vcodec h264_nvenc -vprofile main -preset default -tune ll -vb 2M -maxrate 2M -bufsize 4M -g 25 –vf scale_npp=1280:720
+            exec ffmpeg -vsync 0 -hwaccel cuvid
+                -vcodec h264_cuvid -resize 1280x720 -i rtmp://localhost/live/$name
+                -vcodec h264_nvenc -vprofile main -preset default -tune ll -vb 2M -maxrate 2M -bufsize 4M -g 25
                 -acodec aac -ab 64k
                 -f flv rtmp://localhost/preview/$name;
         }
