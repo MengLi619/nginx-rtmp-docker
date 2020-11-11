@@ -1,0 +1,28 @@
+# rate-control: VBV / maximum bit rate (https://trac.ffmpeg.org/wiki/Encode/H.264)
+
+worker_processes auto;
+rtmp_auto_push on;
+events {}
+rtmp {
+    server {
+        listen 1935;
+        listen [::]:1935 ipv6only=on;
+        max_message 10M;
+
+        application live {
+            live on;
+            exec ffmpeg -i rtmp://localhost/live/$name -threads 1 -vcodec h264 -vprofile baseline -preset ultrafast -tune zerolatency -vb 500K -maxrate 500K -bufsize 1M -g 25 -s 640x360 -acodec aac -ab 64k -f flv rtmp://localhost/preview/$name;
+            record all;
+            record_unique on;
+            record_append on;
+            record_path /var/record;
+            record_suffix -%d-%b-%y-%T.flv;
+            record_max_size 500M;
+        }
+
+        application preview {
+            live on;
+            record off;
+        }
+    }
+}
